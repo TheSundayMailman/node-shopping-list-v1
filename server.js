@@ -1,3 +1,4 @@
+'use strict';
 
 const express = require('express');
 // we'll use morgan to log the HTTP layer
@@ -9,6 +10,7 @@ const bodyParser = require('body-parser');
 // we import the ShoppingList model, which we'll
 // interact with in our GET endpoint
 const {ShoppingList} = require('./models');
+const {Recipes} = require('./models');
 
 const jsonParser = bodyParser.json();
 const app = express();
@@ -30,6 +32,21 @@ ShoppingList.create('peppers', 4);
 app.get('/shopping-list', (req, res) => {
   res.json(ShoppingList.get());
 });
+
+
+// we're going to add some items to Recipes
+// so there's some data to look at. Note that 
+// normally you wouldn't do this. Usually your
+// server will simply expose the state of the
+// underlying database.
+Recipes.create('banana split', ['banana', 'ice cream']);
+Recipes.create('steak', ['steak', 'salt', 'pepper']);
+Recipes.create('popcorn', ['corn', 'butter']);
+
+app.get('/recipes', (req, res) => {
+  res.json(Recipes.get());
+});
+
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
